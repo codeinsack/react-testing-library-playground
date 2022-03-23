@@ -27,36 +27,64 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <h1>Sign Up</h1>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="text"
-          onChange={(event) => setEmail(event.target.value)}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          value={password}
-          id="password"
-          type="password"
-          onChange={(event) => setPassword(event.target.value)}
-        />
-        <label htmlFor="passwordRepeat">Password Repeat</label>
-        <input
-          value={passwordRepeat}
-          id="passwordRepeat"
-          type="password"
-          onChange={(event) => setPasswordRepeat(event.target.value)}
-        />
-        <button disabled={disabled}>Sign Up</button>
+    <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+      <form className="card mt-5" onSubmit={onSubmit}>
+        <div className="card-header">
+          <h1 className="text-center">Sign Up</h1>
+        </div>
+        <div className="card-body">
+          <div className="mb-3">
+            <label className="form-label" htmlFor="username">
+              Username
+            </label>
+            <input
+              className="form-control"
+              id="username"
+              type="text"
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="form-control"
+              id="email"
+              type="text"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="password">
+              Password
+            </label>
+            <input
+              className="form-control"
+              value={password}
+              id="password"
+              type="password"
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="passwordRepeat">
+              Password Repeat
+            </label>
+            <input
+              className="form-control"
+              value={passwordRepeat}
+              id="passwordRepeat"
+              type="password"
+              onChange={(event) => setPasswordRepeat(event.target.value)}
+            />
+          </div>
+          <div className="text-center">
+            <button className="btn btn-primary" disabled={disabled}>
+              Sign Up
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );
