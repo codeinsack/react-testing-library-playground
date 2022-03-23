@@ -1,6 +1,7 @@
 import SignUp from "./SignUp";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import axios from "axios";
 
 describe("Sign Up page", () => {
   describe("Layout", () => {
@@ -67,6 +68,31 @@ describe("Sign Up page", () => {
       userEvent.type(passwordRepeatInput, "pass123");
       const button = screen.queryByRole("button", { name: "Sign Up" });
       expect(button).toBeEnabled();
+    });
+
+    it("sends username, email, password to backend after clicking the button", () => {
+      render(<SignUp />);
+      const usernameInput = screen.getByLabelText("Username");
+      const emailInput = screen.getByLabelText("Email");
+      const passwordInput = screen.getByLabelText("Password");
+      const passwordRepeatInput = screen.getByLabelText("Password Repeat");
+      userEvent.type(passwordInput, "pass123");
+      userEvent.type(passwordRepeatInput, "pass123");
+      userEvent.type(usernameInput, "Rind");
+      userEvent.type(emailInput, "test@mail.io");
+      const button = screen.queryByRole("button", { name: "Sign Up" });
+
+      const mockFn = jest.fn();
+      axios.post = mockFn;
+
+      userEvent.click(button);
+      const firstCallOfMockFunction = mockFn.mock.calls[0];
+      const body = firstCallOfMockFunction[1];
+      expect(body).toEqual({
+        username: "Rind",
+        email: "test@mail.io",
+        password: "pass123",
+      });
     });
   });
 });
