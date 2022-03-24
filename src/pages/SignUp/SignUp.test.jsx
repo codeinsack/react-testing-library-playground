@@ -61,13 +61,22 @@ describe("Sign Up page", () => {
     });
   });
   describe("Interactions", () => {
-    it("enables the button when password fields are filled and equal", () => {
+    let button;
+    const setup = () => {
       render(<SignUp />);
+      const usernameInput = screen.getByLabelText("Username");
+      const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
       const passwordRepeatInput = screen.getByLabelText("Password Repeat");
       userEvent.type(passwordInput, "pass123");
       userEvent.type(passwordRepeatInput, "pass123");
-      const button = screen.queryByRole("button", { name: "Sign Up" });
+      userEvent.type(usernameInput, "Rind");
+      userEvent.type(emailInput, "test@mail.io");
+      button = screen.queryByRole("button", { name: "Sign Up" });
+    };
+
+    it("enables the button when password fields are filled and equal", () => {
+      setup();
       expect(button).toBeEnabled();
     });
 
@@ -81,24 +90,53 @@ describe("Sign Up page", () => {
       );
       server.listen();
 
-      render(<SignUp />);
-      const usernameInput = screen.getByLabelText("Username");
-      const emailInput = screen.getByLabelText("Email");
-      const passwordInput = screen.getByLabelText("Password");
-      const passwordRepeatInput = screen.getByLabelText("Password Repeat");
-      userEvent.type(passwordInput, "pass123");
-      userEvent.type(passwordRepeatInput, "pass123");
-      userEvent.type(usernameInput, "Rind");
-      userEvent.type(emailInput, "test@mail.io");
-      const button = screen.queryByRole("button", { name: "Sign Up" });
+      setup();
+
       userEvent.click(button);
 
       await new Promise((resolve) => setTimeout(resolve, 500));
+
       expect(requestBody).toEqual({
         username: "Rind",
         email: "test@mail.io",
         password: "pass123",
       });
+    });
+
+    it("disables button when there is an ongoing api call", async () => {
+      let counter = 0;
+      const server = setupServer(
+        rest.post("/api/1.0/users", (req, res, ctx) => {
+          counter += 1;
+          return res(ctx.status(200));
+        })
+      );
+      server.listen();
+
+      setup();
+
+      userEvent.click(button);
+      userEvent.click(button);
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      expect(counter).toBe(1);
+    });
+
+    it("displays spinner after clicking the submit", async () => {
+      const server = setupServer(
+        rest.post("/api/1.0/users", (req, res, ctx) => {
+          return res(ctx.status(200));
+        })
+      );
+      server.listen();
+
+      setup();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+      userEvent.click(button);
+
+      const spinner = screen.getByRole("status");
+      expect(spinner).toBeInTheDocument();
     });
   });
 });

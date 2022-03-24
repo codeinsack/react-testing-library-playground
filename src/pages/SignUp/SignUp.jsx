@@ -7,6 +7,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [apiProgress, setApiProgress] = useState(false);
 
   useEffect(() => {
     if (password && passwordRepeat && password === passwordRepeat) {
@@ -23,6 +24,7 @@ const SignUp = () => {
       email,
       password,
     };
+    setApiProgress(true);
     await axios.post("/api/1.0/users", body);
   };
 
@@ -80,7 +82,16 @@ const SignUp = () => {
             />
           </div>
           <div className="text-center">
-            <button className="btn btn-primary" disabled={disabled}>
+            <button
+              className="btn btn-primary"
+              disabled={disabled || apiProgress}
+            >
+              {apiProgress && (
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                />
+              )}
               Sign Up
             </button>
           </div>
