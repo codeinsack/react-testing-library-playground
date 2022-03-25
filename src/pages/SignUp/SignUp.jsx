@@ -71,18 +71,13 @@ const SignUp = () => {
               help={errors.password}
               onChange={setPassword}
             />
-            <div className="mb-3">
-              <label className="form-label" htmlFor="passwordRepeat">
-                Password Repeat
-              </label>
-              <input
-                className="form-control"
-                value={passwordRepeat}
-                id="passwordRepeat"
-                type="password"
-                onChange={(event) => setPasswordRepeat(event.target.value)}
-              />
-            </div>
+            <Input
+              id="passwordRepeat"
+              label="Password Repeat"
+              type="password"
+              help={password !== passwordRepeat ? "Password mismatch" : ""}
+              onChange={setPasswordRepeat}
+            />
             <div className="text-center">
               <button
                 className="btn btn-primary"
