@@ -58,29 +58,19 @@ const SignUp = () => {
               help={errors.username}
               onChange={setUsername}
             />
-            <div className="mb-3">
-              <label className="form-label" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="form-control"
-                id="email"
-                type="text"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="form-control"
-                value={password}
-                id="password"
-                type="password"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
+            <Input
+              id="email"
+              label="Email"
+              help={errors.email}
+              onChange={setEmail}
+            />
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              help={errors.password}
+              onChange={setPassword}
+            />
             <div className="mb-3">
               <label className="form-label" htmlFor="passwordRepeat">
                 Password Repeat

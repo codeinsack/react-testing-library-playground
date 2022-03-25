@@ -1,4 +1,4 @@
-const Input = ({ id, label, help, onChange }) => {
+const Input = ({ id, label, help, onChange, type = "text" }) => {
   let inputClass = "form-control";
 
   if (help) {
@@ -13,7 +13,7 @@ const Input = ({ id, label, help, onChange }) => {
       <input
         className={inputClass}
         id={id}
-        type="text"
+        type={type}
         onChange={(event) => onChange(event.target.value)}
       />
       <span className="invalid-feedback">{help}</span>
