@@ -1,16 +1,22 @@
 const Input = ({ id, label, help, onChange }) => {
+  let inputClass = "form-control";
+
+  if (help) {
+    inputClass += " is-invalid";
+  }
+
   return (
     <div className="mb-3">
       <label className="form-label" htmlFor={id}>
         {label}
       </label>
       <input
-        className="form-control"
+        className={inputClass}
         id={id}
         type="text"
         onChange={(event) => onChange(event.target.value)}
       />
-      <span>{help}</span>
+      <span className="invalid-feedback">{help}</span>
     </div>
   );
 };

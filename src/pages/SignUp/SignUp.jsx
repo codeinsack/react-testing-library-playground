@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Input from "../../components/Input";
+import Input from "../../components/Input/Input";
 
 const SignUp = () => {
   const [disabled, setDisabled] = useState(true);
