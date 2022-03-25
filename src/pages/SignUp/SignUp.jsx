@@ -9,6 +9,7 @@ const SignUp = () => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [apiProgress, setApiProgress] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (password && passwordRepeat && password === passwordRepeat) {
@@ -30,7 +31,9 @@ const SignUp = () => {
       await axios.post("/api/1.0/users", body);
       setSignUpSuccess(true);
     } catch (error) {
-      console.error(error);
+      if (error.response.status === 400) {
+        setErrors(error.response.data.validationErrors);
+      }
     } finally {
       setApiProgress(false);
     }
@@ -58,6 +61,7 @@ const SignUp = () => {
                 type="text"
                 onChange={(event) => setUsername(event.target.value)}
               />
+              <span>{errors.username}</span>
             </div>
             <div className="mb-3">
               <label className="form-label" htmlFor="email">
