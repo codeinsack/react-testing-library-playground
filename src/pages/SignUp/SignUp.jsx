@@ -2,26 +2,43 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Input from "../../components/Input/Input";
 
+const initialValue = {
+  username: "",
+  email: "",
+  password: "",
+  passwordRepeat: "",
+};
+
 const SignUp = () => {
   const [disabled, setDisabled] = useState(true);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [credentials, setCredentials] = useState(initialValue);
   const [apiProgress, setApiProgress] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    const { password, passwordRepeat } = credentials;
     if (password && passwordRepeat && password === passwordRepeat) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [password, passwordRepeat]);
+  }, [credentials.password, credentials.passwordRepeat]);
+
+  const onInputValueChange = ({ target }) => {
+    const { id, value } = target;
+    const errorsCopy = { ...errors };
+    delete errorsCopy[id];
+    setCredentials({
+      ...credentials,
+      [id]: value,
+    });
+    setErrors(errorsCopy);
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    const { username, email, password } = credentials;
     const body = {
       username,
       email,
@@ -56,27 +73,31 @@ const SignUp = () => {
               id="username"
               label="Username"
               help={errors.username}
-              onChange={setUsername}
+              onChange={onInputValueChange}
             />
             <Input
               id="email"
               label="Email"
               help={errors.email}
-              onChange={setEmail}
+              onChange={onInputValueChange}
             />
             <Input
               id="password"
               label="Password"
               type="password"
               help={errors.password}
-              onChange={setPassword}
+              onChange={onInputValueChange}
             />
             <Input
               id="passwordRepeat"
               label="Password Repeat"
               type="password"
-              help={password !== passwordRepeat ? "Password mismatch" : ""}
-              onChange={setPasswordRepeat}
+              help={
+                credentials.password !== credentials.passwordRepeat
+                  ? "Password mismatch"
+                  : ""
+              }
+              onChange={onInputValueChange}
             />
             <div className="text-center">
               <button

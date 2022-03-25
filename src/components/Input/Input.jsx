@@ -14,9 +14,9 @@ const Input = ({ id, label, help, onChange, type = "text" }) => {
         className={inputClass}
         id={id}
         type={type}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => onChange(event)}
       />
-      <span className="invalid-feedback">{help}</span>
+      {help && <span className="invalid-feedback">{help}</span>}
     </div>
   );
 };
