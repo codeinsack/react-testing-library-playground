@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import Input from "../../components/Input";
 
 const SignUp = () => {
   const [disabled, setDisabled] = useState(true);
@@ -51,18 +52,12 @@ const SignUp = () => {
             <h1 className="text-center">Sign Up</h1>
           </div>
           <div className="card-body">
-            <div className="mb-3">
-              <label className="form-label" htmlFor="username">
-                Username
-              </label>
-              <input
-                className="form-control"
-                id="username"
-                type="text"
-                onChange={(event) => setUsername(event.target.value)}
-              />
-              <span>{errors.username}</span>
-            </div>
+            <Input
+              id="username"
+              label="Username"
+              help={errors.username}
+              onChange={setUsername}
+            />
             <div className="mb-3">
               <label className="form-label" htmlFor="email">
                 Email
