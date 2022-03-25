@@ -26,9 +26,14 @@ const SignUp = () => {
       password,
     };
     setApiProgress(true);
-    await axios.post("/api/1.0/users", body);
-    setApiProgress(false);
-    setSignUpSuccess(true);
+    try {
+      await axios.post("/api/1.0/users", body);
+      setSignUpSuccess(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setApiProgress(false);
+    }
   };
 
   return (
