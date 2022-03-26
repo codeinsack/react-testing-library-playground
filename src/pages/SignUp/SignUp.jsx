@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Input from "../../components/Input/Input";
+import { withTranslation } from "react-i18next";
 
 const initialValue = {
   username: "",
@@ -9,7 +10,7 @@ const initialValue = {
   passwordRepeat: "",
 };
 
-const SignUp = () => {
+const SignUp = ({ t }) => {
   const [disabled, setDisabled] = useState(true);
   const [credentials, setCredentials] = useState(initialValue);
   const [apiProgress, setApiProgress] = useState(false);
@@ -66,31 +67,31 @@ const SignUp = () => {
           onSubmit={onSubmit}
         >
           <div className="card-header">
-            <h1 className="text-center">Sign Up</h1>
+            <h1 className="text-center">{t("signUp")}</h1>
           </div>
           <div className="card-body">
             <Input
               id="username"
-              label="Username"
+              label={t("username")}
               help={errors.username}
               onChange={onInputValueChange}
             />
             <Input
               id="email"
-              label="Email"
+              label={t("email")}
               help={errors.email}
               onChange={onInputValueChange}
             />
             <Input
               id="password"
-              label="Password"
+              label={t("password")}
               type="password"
               help={errors.password}
               onChange={onInputValueChange}
             />
             <Input
               id="passwordRepeat"
-              label="Password Repeat"
+              label={t("passwordRepeat")}
               type="password"
               help={
                 credentials.password !== credentials.passwordRepeat
@@ -110,7 +111,7 @@ const SignUp = () => {
                     role="status"
                   />
                 )}
-                Sign Up
+                {t("signUp")}
               </button>
             </div>
           </div>
@@ -125,4 +126,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default withTranslation()(SignUp);
