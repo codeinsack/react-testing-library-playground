@@ -1,6 +1,6 @@
 {
-  "username_null": "Username cannot be null",
-  "username_size": "Must have min 4 and max 32 characters",
+  "username_null": "Пользователь не найден",
+  "username_size": "Должно быть минимум 4 и максимум 32 символа",
   "email_null": "E-mail cannot be null",
   "email_invalid": "E-mail is not valid",
   "password_null": "Password cannot be null",

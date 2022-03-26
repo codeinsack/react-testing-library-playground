@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Input from "../../components/Input/Input";
 import { useTranslation } from "react-i18next";
+import { signUp } from "../../api/apiCalls";
 
 const initialValue = {
   username: "",
@@ -48,7 +48,7 @@ const SignUp = () => {
     };
     setApiProgress(true);
     try {
-      await axios.post("/api/1.0/users", body);
+      await signUp(body);
       setSignUpSuccess(true);
     } catch (error) {
       if (error.response.status === 400) {

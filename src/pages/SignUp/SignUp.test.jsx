@@ -13,6 +13,27 @@ import en from "../../locale/en.json";
 import ru from "../../locale/ru.json";
 import LanguageSelector from "../../components/LanguageSelector/LanguageSelector";
 
+let requestBody;
+let counter = 0;
+let acceptLanguageHeader;
+const server = setupServer(
+  rest.post("/api/1.0/users", (req, res, ctx) => {
+    requestBody = req.body;
+    counter += 1;
+    acceptLanguageHeader = req.headers.get("Accept-Language");
+    return res(ctx.status(200));
+  })
+);
+
+beforeEach(() => {
+  counter = 0;
+  server.resetHandlers();
+});
+
+beforeAll(() => server.listen());
+
+afterAll(() => server.close());
+
 describe("Sign Up page", () => {
   describe("Layout", () => {
     it("has header", () => {
@@ -70,25 +91,6 @@ describe("Sign Up page", () => {
     });
   });
   describe("Interactions", () => {
-    let requestBody;
-    let counter = 0;
-    const server = setupServer(
-      rest.post("/api/1.0/users", (req, res, ctx) => {
-        requestBody = req.body;
-        counter += 1;
-        return res(ctx.status(200));
-      })
-    );
-
-    beforeEach(() => {
-      counter = 0;
-      server.resetHandlers();
-    });
-
-    beforeAll(() => server.listen());
-
-    afterAll(() => server.close());
-
     let button, usernameInput, emailInput, passwordInput, passwordRepeatInput;
     const setup = () => {
       render(<SignUp />);
@@ -223,7 +225,7 @@ describe("Sign Up page", () => {
     );
   });
   describe("Internationalization", () => {
-    let russianToggle, englishToggle;
+    let russianToggle, englishToggle, passwordInput, passwordRepeatInput;
     const setup = () => {
       render(
         <>
@@ -233,6 +235,8 @@ describe("Sign Up page", () => {
       );
       russianToggle = screen.getByTitle("Russian");
       englishToggle = screen.getByTitle("English");
+      passwordInput = screen.getByLabelText(en.password);
+      passwordRepeatInput = screen.getByLabelText(en.passwordRepeat);
     };
 
     afterEach(() => {
@@ -292,12 +296,34 @@ describe("Sign Up page", () => {
       setup();
       userEvent.click(russianToggle);
 
-      const passwordInput = screen.getByLabelText(ru.password);
       userEvent.type(passwordInput, "Pass1234567");
       const validationMessageInRussian = screen.queryByText(
         ru.passwordMismatchValidation
       );
       expect(validationMessageInRussian).toBeInTheDocument();
+    });
+
+    it("sends accept language header as en for outgoing request", async () => {
+      setup();
+      userEvent.type(passwordInput, "pass123");
+      userEvent.type(passwordRepeatInput, "pass123");
+      const button = screen.getByRole("button", { name: en.signUp });
+      const form = screen.getByTestId("form-sign-up");
+      userEvent.click(button);
+      await waitForElementToBeRemoved(form);
+      expect(acceptLanguageHeader).toBe("en");
+    });
+
+    it("sends accept language header as ru for outgoing request after selecting this language", async () => {
+      setup();
+      userEvent.type(passwordInput, "pass123");
+      userEvent.type(passwordRepeatInput, "pass123");
+      const button = screen.getByRole("button", { name: en.signUp });
+      userEvent.click(russianToggle);
+      const form = screen.getByTestId("form-sign-up");
+      userEvent.click(button);
+      await waitForElementToBeRemoved(form);
+      expect(acceptLanguageHeader).toBe("ru");
     });
   });
 });
