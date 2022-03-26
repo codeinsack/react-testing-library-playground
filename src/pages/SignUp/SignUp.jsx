@@ -10,7 +10,7 @@ const initialValue = {
   passwordRepeat: "",
 };
 
-const SignUp = ({ t }) => {
+const SignUp = ({ t, i18n }) => {
   const [disabled, setDisabled] = useState(true);
   const [credentials, setCredentials] = useState(initialValue);
   const [apiProgress, setApiProgress] = useState(false);
@@ -122,6 +122,20 @@ const SignUp = ({ t }) => {
           Please check your e-mail to activate your account
         </div>
       )}
+      <img
+        src="http://purecatamphetamine.github.io/country-flag-icons/3x2/RU.svg"
+        title="Russian"
+        width="50"
+        alt="Russian"
+        onClick={() => i18n.changeLanguage("ru")}
+      />
+      <img
+        src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
+        title="English"
+        width="50"
+        alt="English"
+        onClick={() => i18n.changeLanguage("en")}
+      />
     </div>
   );
 };
