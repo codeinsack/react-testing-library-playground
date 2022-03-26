@@ -1,5 +1,6 @@
 import SignUp from "./SignUp";
 import {
+  act,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -7,9 +8,10 @@ import {
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import "../../locale/i18n";
+import i18n from "../../locale/i18n";
 import en from "../../locale/en.json";
 import ru from "../../locale/ru.json";
+import LanguageSelector from "../../components/LanguageSelector/LanguageSelector";
 
 describe("Sign Up page", () => {
   describe("Layout", () => {
@@ -221,23 +223,23 @@ describe("Sign Up page", () => {
     );
   });
   describe("Internationalization", () => {
-    it("initially displays all text in English", () => {
-      render(<SignUp />);
-      expect(
-        screen.getByRole("heading", { name: en.signUp })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: en.signUp })
-      ).toBeInTheDocument();
-      expect(screen.getByLabelText(en.username)).toBeInTheDocument();
-      expect(screen.getByLabelText(en.email)).toBeInTheDocument();
-      expect(screen.getByLabelText(en.password)).toBeInTheDocument();
-      expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    const setup = () => {
+      render(
+        <>
+          <SignUp />
+          <LanguageSelector />
+        </>
+      );
+    };
+
+    afterEach(() => {
+      act(() => {
+        i18n.changeLanguage("en");
+      });
     });
 
     it("displays all text in Russian after changing the language", () => {
-      render(<SignUp />);
-
+      setup();
       const russianToggle = screen.getByTitle("Russian");
       userEvent.click(russianToggle);
 
@@ -253,9 +255,22 @@ describe("Sign Up page", () => {
       expect(screen.getByLabelText(ru.passwordRepeat)).toBeInTheDocument();
     });
 
-    it("displays all text in English after changing back from Russian", () => {
-      render(<SignUp />);
+    it("initially displays all text in English", () => {
+      setup();
+      expect(
+        screen.getByRole("heading", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: en.signUp })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(en.username)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.email)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.password)).toBeInTheDocument();
+      expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
 
+    it("displays all text in English after changing back from Russian", () => {
+      setup();
       const russianToggle = screen.getByTitle("Russian");
       userEvent.click(russianToggle);
       const englishToggle = screen.getByTitle("English");

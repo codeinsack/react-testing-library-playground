@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Input from "../../components/Input/Input";
-import { withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const initialValue = {
   username: "",
@@ -10,12 +10,13 @@ const initialValue = {
   passwordRepeat: "",
 };
 
-const SignUp = ({ t, i18n }) => {
+const SignUp = () => {
   const [disabled, setDisabled] = useState(true);
   const [credentials, setCredentials] = useState(initialValue);
   const [apiProgress, setApiProgress] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     const { password, passwordRepeat } = credentials;
@@ -122,22 +123,8 @@ const SignUp = ({ t, i18n }) => {
           Please check your e-mail to activate your account
         </div>
       )}
-      <img
-        src="http://purecatamphetamine.github.io/country-flag-icons/3x2/RU.svg"
-        title="Russian"
-        width="50"
-        alt="Russian"
-        onClick={() => i18n.changeLanguage("ru")}
-      />
-      <img
-        src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
-        title="English"
-        width="50"
-        alt="English"
-        onClick={() => i18n.changeLanguage("en")}
-      />
     </div>
   );
 };
 
-export default withTranslation()(SignUp);
+export default SignUp;
