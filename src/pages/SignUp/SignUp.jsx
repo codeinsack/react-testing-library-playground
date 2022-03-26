@@ -96,7 +96,7 @@ const SignUp = () => {
               type="password"
               help={
                 credentials.password !== credentials.passwordRepeat
-                  ? "Password mismatch"
+                  ? t("passwordMismatchValidation")
                   : ""
               }
               onChange={onInputValueChange}

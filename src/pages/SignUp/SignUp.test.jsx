@@ -223,6 +223,7 @@ describe("Sign Up page", () => {
     );
   });
   describe("Internationalization", () => {
+    let russianToggle, englishToggle;
     const setup = () => {
       render(
         <>
@@ -230,29 +231,14 @@ describe("Sign Up page", () => {
           <LanguageSelector />
         </>
       );
+      russianToggle = screen.getByTitle("Russian");
+      englishToggle = screen.getByTitle("English");
     };
 
     afterEach(() => {
       act(() => {
         i18n.changeLanguage("en");
       });
-    });
-
-    it("displays all text in Russian after changing the language", () => {
-      setup();
-      const russianToggle = screen.getByTitle("Russian");
-      userEvent.click(russianToggle);
-
-      expect(
-        screen.getByRole("heading", { name: ru.signUp })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: ru.signUp })
-      ).toBeInTheDocument();
-      expect(screen.getByLabelText(ru.username)).toBeInTheDocument();
-      expect(screen.getByLabelText(ru.email)).toBeInTheDocument();
-      expect(screen.getByLabelText(ru.password)).toBeInTheDocument();
-      expect(screen.getByLabelText(ru.passwordRepeat)).toBeInTheDocument();
     });
 
     it("initially displays all text in English", () => {
@@ -269,11 +255,25 @@ describe("Sign Up page", () => {
       expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
     });
 
+    it("displays all text in Russian after changing the language", () => {
+      setup();
+      userEvent.click(russianToggle);
+
+      expect(
+        screen.getByRole("heading", { name: ru.signUp })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: ru.signUp })
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(ru.username)).toBeInTheDocument();
+      expect(screen.getByLabelText(ru.email)).toBeInTheDocument();
+      expect(screen.getByLabelText(ru.password)).toBeInTheDocument();
+      expect(screen.getByLabelText(ru.passwordRepeat)).toBeInTheDocument();
+    });
+
     it("displays all text in English after changing back from Russian", () => {
       setup();
-      const russianToggle = screen.getByTitle("Russian");
       userEvent.click(russianToggle);
-      const englishToggle = screen.getByTitle("English");
       userEvent.click(englishToggle);
 
       expect(
@@ -286,6 +286,18 @@ describe("Sign Up page", () => {
       expect(screen.getByLabelText(en.email)).toBeInTheDocument();
       expect(screen.getByLabelText(en.password)).toBeInTheDocument();
       expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
+
+    it("displays password mismatch validation in Russian", () => {
+      setup();
+      userEvent.click(russianToggle);
+
+      const passwordInput = screen.getByLabelText(ru.password);
+      userEvent.type(passwordInput, "Pass1234567");
+      const validationMessageInRussian = screen.queryByText(
+        ru.passwordMismatchValidation
+      );
+      expect(validationMessageInRussian).toBeInTheDocument();
     });
   });
 });

@@ -3,5 +3,6 @@
   "username": "Имя пользователя",
   "email": "Электронная почта",
   "password": "Пароль",
-  "passwordRepeat": "Подтвердить пароль"
+  "passwordRepeat": "Подтвердить пароль",
+  "passwordMismatchValidation": "Пароль не совпадает"
 }
