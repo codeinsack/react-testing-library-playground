@@ -4,5 +4,7 @@
   "email": "Электронная почта",
   "password": "Пароль",
   "passwordRepeat": "Подтвердить пароль",
-  "passwordMismatchValidation": "Пароль не совпадает"
+  "passwordMismatchValidation": "Пароль не совпадает",
+  "login": "Авторизация",
+  "home": "Домой"
 }

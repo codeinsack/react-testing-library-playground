@@ -4,5 +4,7 @@
   "email": "Email",
   "password": "Password",
   "passwordRepeat": "Password Repeat",
-  "passwordMismatchValidation": "Password mismatch"
+  "passwordMismatchValidation": "Password mismatch",
+  "login": "Login",
+  "home": "Home"
 }
