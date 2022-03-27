@@ -60,7 +60,10 @@ const SignUp = () => {
   };
 
   return (
-    <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+    <div
+      data-testid="signup-page"
+      className="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
+    >
       {!signUpSuccess && (
         <form
           data-testid="form-sign-up"
