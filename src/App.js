@@ -6,7 +6,7 @@ import User from "./pages/User/User";
 import { useTranslation } from "react-i18next";
 import logo from "./assets/hoaxify.png";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import AccountActivation from "./pages/AccountActivation/Home";
+import AccountActivation from "./pages/AccountActivation/AccountActivation";
 
 function App() {
   const { t } = useTranslation();
