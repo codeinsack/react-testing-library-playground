@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { activate } from "../../api/apiCalls";
 import { useParams } from "react-router-dom";
+import Alert from "../../components/Alert/Alert";
+import Spinner from "../../components/Spinner/Spinner";
 
 const AccountActivation = () => {
   const [result, setResult] = useState("");
@@ -15,15 +17,16 @@ const AccountActivation = () => {
         setResult("fail");
       }
     })();
-  }, []);
+  }, [params.token]);
 
   return (
     <div data-testid="activation-page">
-      {result === "success" && (
-        <div className="alert alert-success mt-3">Account is activated</div>
-      )}
-      {result === "fail" && (
-        <div className="alert alert-danger mt-3">Activation failure</div>
+      {result === "success" && <Alert>Account is activated</Alert>}
+      {result === "fail" && <Alert type="danger">Activation failure</Alert>}
+      {!result && (
+        <Alert type="secondary" center>
+          <Spinner size="big" />
+        </Alert>
       )}
     </div>
   );
