@@ -4,61 +4,40 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import User from "./pages/User/User";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import logo from "./assets/hoaxify.png";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 function App() {
   const { t } = useTranslation();
-  const [path, setPath] = useState(window.location.pathname);
-
-  const onLinkClick = (event) => {
-    event.preventDefault();
-    const path = event.currentTarget.attributes.href.value;
-    window.history.pushState({}, "", path);
-    setPath(path);
-  };
 
   return (
-    <>
+    <Router>
       <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
         <div className="container">
-          <a
-            className="navbar-brand"
-            href="/"
-            title="Home"
-            onClick={onLinkClick}
-          >
+          <Link className="navbar-brand" to="/" title="Home">
             <img src={logo} width="60" alt="Hoaxify" />
             Hoaxify
-          </a>
+          </Link>
           <ul className="navbar-nav">
-            <a
-              className="nav-link"
-              href="/signup"
-              title="Sign Up"
-              onClick={onLinkClick}
-            >
+            <Link className="nav-link" to="/signup" title="Sign Up">
               {t("signUp")}
-            </a>
-            <a
-              className="nav-link"
-              href="/login"
-              title="Login"
-              onClick={onLinkClick}
-            >
+            </Link>
+            <Link className="nav-link" to="/login" title="Login">
               {t("login")}
-            </a>
+            </Link>
           </ul>
         </div>
       </nav>
       <div className="container">
-        {path === "/" && <Home />}
-        {path === "/signup" && <SignUp />}
-        {path === "/login" && <Login />}
-        {path.startsWith("/user/") && <User />}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/user/:id" element={<User />} />
+        </Routes>
         <LanguageSelector />
       </div>
-    </>
+    </Router>
   );
 }
 
