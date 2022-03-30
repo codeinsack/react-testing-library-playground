@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import withHover from "../../HOCs/withHover";
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
@@ -23,4 +24,4 @@ const LanguageSelector = () => {
   );
 };
 
-export default LanguageSelector;
+export default withHover(LanguageSelector);
