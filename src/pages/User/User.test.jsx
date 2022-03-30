@@ -36,4 +36,11 @@ describe("User Page", () => {
       expect(screen.queryByText("user1")).toBeInTheDocument();
     });
   });
+
+  it("displays spinner while the api call is in progress", async () => {
+    render(<User />);
+    const spinner = screen.getByRole("status");
+    await screen.findByText("user1");
+    expect(spinner).not.toBeInTheDocument();
+  });
 });
