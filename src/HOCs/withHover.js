@@ -19,21 +19,9 @@ const withHover = (WrappedComponent) => {
     };
 
     render() {
-      let style = {};
-
-      if (this.state.on) {
-        style = {
-          border: "1px solid red",
-        };
-      }
-
       return (
-        <div
-          style={style}
-          onMouseOver={this.onMouseOver}
-          onMouseOut={this.onMouseOut}
-        >
-          <WrappedComponent {...this.props} />
+        <div onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
+          <WrappedComponent {...this.props} on={this.state.on} />
         </div>
       );
     }
