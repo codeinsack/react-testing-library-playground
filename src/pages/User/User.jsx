@@ -9,26 +9,41 @@ const User = () => {
   const params = useParams();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
+  const [failedMessage, setFailedMessage] = useState(null);
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
-      const { data } = await fetchUser(params.id);
-      setLoading(false);
-      setUser(data);
+      try {
+        setLoading(true);
+        const { data } = await fetchUser(params.id);
+        setUser(data);
+      } catch (error) {
+        setFailedMessage(error.response.data.message);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
-  return (
-    <div data-testid="user-page">
-      {!loading && <ProfileCard user={user} />}
-      {loading && (
-        <Alert type="secondary" center>
-          <Spinner size="big" />
-        </Alert>
-      )}
-    </div>
+  let content = (
+    <Alert type="secondary" center>
+      <Spinner size="big" />
+    </Alert>
   );
+
+  if (!loading) {
+    if (failedMessage) {
+      content = (
+        <Alert type="secondary" center>
+          {failedMessage}
+        </Alert>
+      );
+    } else {
+      content = <ProfileCard user={user} />;
+    }
+  }
+
+  return <div data-testid="user-page">{content}</div>;
 };
 
 export default User;

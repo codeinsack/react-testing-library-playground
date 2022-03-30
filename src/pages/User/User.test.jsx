@@ -43,4 +43,17 @@ describe("User Page", () => {
     await screen.findByText("user1");
     expect(spinner).not.toBeInTheDocument();
   });
+
+  it("displays error message received from backend when the user is not found", async () => {
+    server.use(
+      rest.get("/api/1.0/users/:id", (req, res, ctx) => {
+        return res(ctx.status(404), ctx.json({ message: "User not found" }));
+      })
+    );
+    render(<User />);
+    await waitFor(() => {
+      // eslint-disable-next-line testing-library/prefer-presence-queries
+      expect(screen.queryByText("User not found")).toBeInTheDocument();
+    });
+  });
 });
