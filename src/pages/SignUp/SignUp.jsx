@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Input from "../../components/Input/Input";
 import { useTranslation } from "react-i18next";
 import { signUp } from "../../api/apiCalls";
 import Alert from "../../components/Alert/Alert";
 import Spinner from "../../components/Spinner/Spinner";
+import useHover from "../../hooks/useHover";
 
 const initialValue = {
   username: "",
@@ -18,7 +19,14 @@ const SignUp = () => {
   const [apiProgress, setApiProgress] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [node, setNode] = useState(null);
   const { t } = useTranslation();
+  const ref = useRef();
+  const on = useHover(node);
+
+  useEffect(() => {
+    setNode(ref.current);
+  }, []);
 
   useEffect(() => {
     const { password, passwordRepeat } = credentials;
@@ -61,13 +69,27 @@ const SignUp = () => {
     }
   };
 
+  let style = {};
+
+  if (on) {
+    style = {
+      border: "1px solid red",
+    };
+  }
+
   return (
     <div
       data-testid="signup-page"
       className="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
+      style={style}
     >
       {!signUpSuccess && (
-        <form data-testid="form-sign-up" className="card " onSubmit={onSubmit}>
+        <form
+          ref={ref}
+          data-testid="form-sign-up"
+          className="card "
+          onSubmit={onSubmit}
+        >
           <div className="card-header">
             <h1 className="text-center">{t("signUp")}</h1>
           </div>
