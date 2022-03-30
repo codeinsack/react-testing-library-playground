@@ -24,9 +24,16 @@ class UserList extends Component {
         <div className="card-header text-center">
           <h3>Users</h3>
         </div>
-        {this.state.page.content.map((user) => (
-          <span key={user.id}>{user.username}</span>
-        ))}
+        <ul className="list-group list-group-flush">
+          {this.state.page.content.map((user) => (
+            <li
+              className="list-group-item list-group-item-action"
+              key={user.id}
+            >
+              {user.username}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
