@@ -2,6 +2,7 @@ import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { render, screen } from "@testing-library/react";
 import Login from "./Login";
+import userEvent from "@testing-library/user-event";
 
 const server = setupServer(
   rest.post("/api/1.0/users", (req, res, ctx) => {
@@ -53,6 +54,18 @@ describe("Login Page", () => {
       render(<Login />);
       const button = screen.queryByRole("button", { name: "Login" });
       expect(button).toBeDisabled();
+    });
+  });
+
+  describe("Interactions", () => {
+    it("enables the button when email and password inputs are filled", () => {
+      render(<Login />);
+      const emailInput = screen.getByLabelText("Email");
+      const passwordInput = screen.getByLabelText("Password");
+      userEvent.type(emailInput, "user100@mail.io");
+      userEvent.type(passwordInput, "pasd2313");
+      const button = screen.queryByRole("button", { name: "Login" });
+      expect(button).toBeEnabled();
     });
   });
 });
