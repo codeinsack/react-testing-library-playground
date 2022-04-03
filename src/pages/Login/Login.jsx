@@ -1,5 +1,7 @@
 import Input from "../../components/Input/Input";
 import { useState } from "react";
+import { login } from "../../api/apiCalls";
+import Spinner from "../../components/Spinner/Spinner";
 
 const initialValue = {
   email: "",
@@ -8,6 +10,7 @@ const initialValue = {
 
 const Login = () => {
   const [credentials, setCredentials] = useState(initialValue);
+  const [loading, setLoading] = useState(false);
 
   let disabled = !(credentials.email && credentials.password);
 
@@ -17,6 +20,21 @@ const Login = () => {
       ...credentials,
       [id]: value,
     });
+  };
+
+  const submit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      await login({
+        email: credentials.email,
+        password: credentials.password,
+      });
+    } catch (error) {
+      //
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,7 +55,12 @@ const Login = () => {
             onChange={onInputValueChange}
           />
           <div className="text-center">
-            <button className="btn btn-primary" disabled={disabled}>
+            <button
+              className="btn btn-primary"
+              disabled={disabled || loading}
+              onClick={submit}
+            >
+              {loading && <Spinner />}
               Login
             </button>
           </div>

@@ -1,16 +1,26 @@
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import Login from "./Login";
 import userEvent from "@testing-library/user-event";
 
+let requestBody;
+let count = 0;
+
 const server = setupServer(
-  rest.post("/api/1.0/users", (req, res, ctx) => {
-    return res(ctx.status(200));
+  rest.post("/api/1.0/auth", (req, res, ctx) => {
+    requestBody = req.body;
+    count++;
+    return res(ctx.status(401));
   })
 );
 
 beforeEach(() => {
+  count = 0;
   server.resetHandlers();
 });
 
@@ -58,14 +68,48 @@ describe("Login Page", () => {
   });
 
   describe("Interactions", () => {
-    it("enables the button when email and password inputs are filled", () => {
+    let button;
+
+    const setup = () => {
       render(<Login />);
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
       userEvent.type(emailInput, "user100@mail.io");
       userEvent.type(passwordInput, "pasd2313");
-      const button = screen.queryByRole("button", { name: "Login" });
+      button = screen.queryByRole("button", { name: "Login" });
+    };
+
+    it("enables the button when email and password inputs are filled", () => {
+      setup();
       expect(button).toBeEnabled();
+    });
+
+    it("displays spinner during api call", async () => {
+      setup();
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+      userEvent.click(button);
+      const spinner = screen.getByRole("status");
+      await waitForElementToBeRemoved(spinner);
+    });
+
+    it("sends email and password after clicking the button", async () => {
+      setup();
+      userEvent.click(button);
+      const spinner = screen.getByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      expect(requestBody).toEqual({
+        email: "user100@mail.io",
+        password: "pasd2313",
+      });
+    });
+
+    it("disabled the button when there is an api call", async () => {
+      setup();
+      userEvent.click(button);
+      userEvent.click(button);
+      const spinner = screen.getByRole("status");
+      await waitForElementToBeRemoved(spinner);
+      expect(count).toEqual(1);
     });
   });
 });
