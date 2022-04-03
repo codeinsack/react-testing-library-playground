@@ -2,6 +2,7 @@ import Input from "../../components/Input/Input";
 import { useState } from "react";
 import { login } from "../../api/apiCalls";
 import Spinner from "../../components/Spinner/Spinner";
+import Alert from "../../components/Alert/Alert";
 
 const initialValue = {
   email: "",
@@ -11,10 +12,12 @@ const initialValue = {
 const Login = () => {
   const [credentials, setCredentials] = useState(initialValue);
   const [loading, setLoading] = useState(false);
+  const [failMessage, setFailMessage] = useState(null);
 
   let disabled = !(credentials.email && credentials.password);
 
   const onInputValueChange = ({ target }) => {
+    setFailMessage(null);
     const { id, value } = target;
     setCredentials({
       ...credentials,
@@ -31,7 +34,7 @@ const Login = () => {
         password: credentials.password,
       });
     } catch (error) {
-      //
+      setFailMessage(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -54,6 +57,7 @@ const Login = () => {
             type="password"
             onChange={onInputValueChange}
           />
+          {failMessage && <Alert type="danger">{failMessage}</Alert>}
           <div className="text-center">
             <button
               className="btn btn-primary"
